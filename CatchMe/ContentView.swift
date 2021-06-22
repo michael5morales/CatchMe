@@ -13,7 +13,9 @@ struct ContentView: View {
     @State private var yCoor: CGFloat = 200
     @State private var score: Int = 0
     @State private var gameOver: Bool = false
-    
+    @State private var isGame: Bool = true
+    @State private var color: Color = Color.purple
+    @State private var restartBtnTxt: String = "Play Again"
     
     var body: some View {
         
@@ -26,9 +28,12 @@ struct ContentView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        
+                        isGame = true
+                        score = 0
+                        color = Color.purple
+                        restartBtnTxt = "Restart"
                     }) {
-                        Text("Play Again")
+                        Text(restartBtnTxt)
                             
                     }
                     .padding(.trailing, 15.0)
@@ -39,25 +44,32 @@ struct ContentView: View {
             GeometryReader { geometry in
                 Button(action: {
                     
-                    xCoor = CGFloat.random(in: 150...(geometry.size.width - 150))
-                    
-                    yCoor = CGFloat.random(in:150...(geometry.size.height - 150))
-                    
-                    score += 1
+                    if (isGame) {
+                        xCoor = CGFloat.random(in: 150...(geometry.size.width - 150))
+                        
+                        yCoor = CGFloat.random(in:150...(geometry.size.height - 150))
+                        
+                        score += 1
+                        
+                        if (xCoor > ((geometry.size.width / 2) - 30) && xCoor < ((geometry.size.width / 2) + 30) && yCoor > ((geometry.size.height / 2) - 30) && yCoor < ((geometry.size.height / 2) + 30)) {
+                            isGame = false
+                            color = Color.green
+                            restartBtnTxt = "Play Again"
+                        }
+                    }
                     
                 }) {
-                    Text("Catch me if you can")
+                    Text("CATCH ME IF YOU CAN")
                         .fontWeight(.regular)
                         .font(.footnote)
                         .padding()
                         .foregroundColor(.white)
                         .padding(10)
-                        .frame(width: 200, height: /*@START_MENU_TOKEN@*/100.0/*@END_MENU_TOKEN@*/)
-                        
+                        .frame(width: 200, height: 150)
                         
                 }
                 .frame(width: /*@START_MENU_TOKEN@*/150.0/*@END_MENU_TOKEN@*/, height: /*@START_MENU_TOKEN@*/150.0/*@END_MENU_TOKEN@*/)
-                .background(Color.purple)
+                .background(color)
                 .cornerRadius(600)
                 .position(x: (xCoor), y: yCoor)
             }
